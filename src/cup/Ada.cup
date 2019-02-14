@@ -1,0 +1,346 @@
+package compiladorada;
+import java_cup.runtime.*;
+import java.io.*;
+
+
+/* Inicializacion  */
+parser code {: 
+    public bool main = false;
+    public int errors = 0;
+
+    public void report_error(String message, Object info) {
+        errors++;
+        System.out.println(message+" at");
+        if ( info instanceof ComplexSymbolFactory.ComplexSymbol )
+            System.out.println(info);
+        else 
+            System.err.println("Error : " + message);
+    }
+    public void report_fatal_error(String message, Object info) {
+        try{
+            report_error(message, info);
+        }catch(Exception e){
+            System.err.println("Fatal Syntax Error");
+        }   
+    }
+:};
+
+/* Terminales */
+terminal EOL;
+terminal UNDERSCORE;
+
+/* identificadores y procedimientos */
+//terminal MAIN;
+terminal DIM, AS;
+terminal FUNCTION, SUB; 
+terminal BYREF, BYVAL; 
+terminal END; 
+//terminal EXIT;
+//terminal RETURN;
+terminal CALL;
+
+/* estructuras de control e iteradores */
+terminal IF;
+terminal THEN;
+terminal ELSE;
+terminal ELSEIF;
+//terminal SELECT;
+//terminal CASE;
+terminal TO;
+terminal FOR;
+//terminal STEP;
+terminal NEXT;
+terminal DO;
+terminal LOOP;
+//terminal UNTIL;
+terminal WHILE;
+
+/* Operadores */
+terminal LPAREN;
+terminal RPAREN;
+terminal COMMA;
+//terminal DOT;
+
+terminal AMP;
+terminal PLUS;
+terminal MINUS;
+terminal MULT;
+terminal DIV;
+terminal EQ;
+terminal NOTEQ;
+terminal GT;
+terminal LT;
+terminal LTEQ;
+terminal GTEQ;
+
+
+/* literales */
+terminal BOOLEAN, INTEGER, STRING, CHAR, VARIANT;
+terminal AND, OR, NOT;
+terminal NOTHING;
+terminal FALSE, TRUE;
+terminal IDENTIFIER;
+terminal STRINGLITERAL;
+terminal CHARLITERAL;
+terminal INTEGERLITERAL;
+
+/* No-Terminales */
+non terminal program; 
+non terminal Symbol modules;
+non terminal literal, type_name, type;
+//non terminal type_arguments_opt;
+//non terminal type_arguments;
+//non terminal type_argument_list;
+non terminal type_parameter_list_opt;
+non terminal type_parameter_list;
+non terminal type_parameters;
+non terminal param_modifier;
+non terminal param_type;
+non terminal type_parameter;
+non terminal declarador_variable;
+non terminal variable_ids;
+non terminal variable_type;
+non terminal variable_exp;
+non terminal declaracion_sub, declaracion_func;
+non terminal bloque;
+non terminal declaraciones, declaracion;
+non terminal declaracion_local;
+non terminal declaracion_asignacion;
+non terminal declaracion_invocacion;
+non terminal declaracion_if, declaraciones_elseif, declaracion_elseif, declaracion_else;
+non terminal declaracion_while;
+non terminal declaracion_for;
+non terminal variable_loop;
+
+non terminal expresion, expresion_simple, expresion_operacion, expresion_invocacion;
+non terminal argumentos_opt, argumentos;
+non terminal expresion_aritmetica;
+non terminal expresion_relacional;
+non terminal concatenar_multi;
+non terminal expresion_concatenar;
+non terminal expresion_logica;
+non terminal expresion_unaria, expresion_suma, expresion_multi;
+
+/* Precedencia */
+precedence left PLUS, MINUS;
+precedence left MULT, DIV; 
+precedence left OR, AND;
+precedence left NOT;
+precedence left ELSE;
+precedence left AMP;
+precedence left EQ, NOTEQ, GT, LT, LTEQ, GTEQ;
+
+
+/* Gramatica */
+start with program;
+
+program                 ::= modules
+                        //{: If (!main) report_error("not main", program); :}
+                        ;
+
+modules                 ::= declarador_variable
+                        |   declaracion_func
+                        |   declaracion_sub
+                        |   modules declarador_variable
+                        |   modules declaracion_func
+                        |   modules declaracion_sub
+                        |   error EOL
+                        ;
+
+// Literales y Variables
+
+literal                 ::= TRUE
+                        |   FALSE
+                        |   STRINGLITERAL
+                        |   CHARLITERAL
+                        |   INTEGERLITERAL
+                        |   NOTHING
+                        ;
+
+//type_arguments_opt      ::= LPAREN type_argument_list RPAREN
+//                        |   
+//                        ;
+
+//type_arguments          ::= LPAREN type_argument_list RPAREN
+//                        ;
+
+//type_argument_list      ::= type_name
+//                        |   type_argument_list COMMA type_name
+//                        ;
+
+type_name               ::= IDENTIFIER
+                        |   type
+                        ;
+
+type                    ::= BOOLEAN
+                        |   INTEGER
+                        |   STRING
+                        |   CHAR
+                        |   VARIANT
+                        ;
+
+type_parameter_list_opt ::= 
+                        |   type_parameter_list
+                        ;
+
+type_parameter_list     ::= LPAREN RPAREN 
+                        |   LPAREN type_parameters RPAREN
+                        ;
+
+type_parameters         ::= type_parameter
+                        |   type_parameters COMMA type_parameter
+                        ;
+
+param_modifier          ::= 
+                        |   BYVAL
+                        |   BYREF
+                        ;
+param_type              ::= 
+                        |   AS type_name
+                        ;
+
+type_parameter          ::= param_modifier IDENTIFIER param_type;
+
+declarador_variable     ::= DIM variable_ids variable_type variable_exp EOL
+                        ;
+
+variable_ids            ::= IDENTIFIER
+                        |   variable_ids COMMA IDENTIFIER
+                        ;
+
+variable_type           ::= 
+                        |   AS type_name
+                        ;
+
+variable_exp            ::=
+                        |   EQ expresion
+                        ;
+
+// procedimientos y funciones
+
+declaracion_func        ::= FUNCTION IDENTIFIER:id type_parameter_list_opt AS type_name EOL bloque END FUNCTION EOL
+                        //{: if (!main && id == "main") main = true; 
+                        //   else main = false; :}
+                        ;
+
+declaracion_sub         ::= SUB IDENTIFIER type_parameter_list_opt EOL bloque END SUB EOL
+                        ;
+
+// Bloques y Declaraciones 
+
+bloque                  ::= declaraciones
+                        |   
+                        ;
+
+declaraciones           ::= declaracion
+                        |   declaraciones declaracion
+                        ;
+
+declaracion             ::= declaracion_local
+                        |   declaracion_asignacion
+                        |   declaracion_invocacion
+                        |   declaracion_if
+                        |   declaracion_while
+                        |   declaracion_for
+                        |   error EOL
+                        ;
+
+declaracion_local       ::= declarador_variable
+                        ;
+
+declaracion_asignacion  ::= IDENTIFIER EQ expresion EOL
+                        ;
+
+declaracion_invocacion  ::= CALL IDENTIFIER argumentos_opt EOL
+                        |   IDENTIFIER argumentos_opt EOL
+                        ;                        
+
+declaracion_if          ::= IF expresion THEN EOL bloque declaraciones_elseif declaracion_else END IF EOL
+                        ;
+
+declaraciones_elseif    ::= 
+                        |   declaraciones_elseif declaracion_elseif
+                        ;
+
+declaracion_elseif      ::= ELSEIF expresion THEN EOL bloque
+                        ;
+
+declaracion_else        ::= ELSE EOL bloque
+                        ;
+
+declaracion_while       ::= DO WHILE expresion EOL bloque LOOP EOL
+                        ;
+
+declaracion_for         ::= FOR variable_loop EQ expresion TO expresion EOL bloque NEXT EOL
+                        ;
+
+variable_loop           ::= IDENTIFIER variable_type
+                        ;
+
+// Expresiones
+
+expresion               ::= expresion_simple
+                        |   expresion_operacion
+                        |   expresion_invocacion
+                        |   error
+                        ;
+
+// FALTA IMPRESION, READ y WRITE ARCHIVO
+expresion_simple        ::= literal
+                        |   IDENTIFIER
+                        |   LPAREN expresion RPAREN
+                        ;
+
+argumentos_opt          ::=  
+                        |   argumentos
+                        ;
+                        
+argumentos              ::= expresion
+                        |   argumentos COMMA expresion
+                        ;
+
+expresion_invocacion    ::= IDENTIFIER LPAREN argumentos_opt RPAREN
+                        ;
+
+expresion_operacion     ::= expresion_aritmetica
+                        |   expresion_relacional
+                        |   expresion_concatenar
+                        |   expresion_logica
+                        ;
+
+expresion_aritmetica    ::= expresion_unaria
+                        |   expresion_suma
+                        |   expresion_multi
+                        ;
+
+expresion_unaria        ::= PLUS expresion
+                        |   MINUS expresion
+                        ;
+
+expresion_suma          ::= expresion PLUS expresion
+                        |   expresion MINUS expresion
+                        ;
+
+expresion_multi         ::= expresion MULT expresion
+                        |   expresion DIV expresion
+                        ;
+
+expresion_relacional    ::= expresion EQ expresion
+                        |   expresion NOTEQ expresion
+                        |   expresion LT expresion
+                        |   expresion GT expresion
+                        |   expresion LTEQ expresion
+                        |   expresion GTEQ expresion
+                        ;
+
+concatenar_multi        ::= UNDERSCORE EOL expresion
+                        |   expresion
+                        ;
+
+expresion_concatenar    ::= expresion AMP concatenar_multi
+                        ;
+
+expresion_logica        ::= NOT expresion
+                        |   expresion AND expresion
+                        |   expresion OR  expresion
+                        ;
