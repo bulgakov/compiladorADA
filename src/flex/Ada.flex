@@ -64,7 +64,7 @@ Espacios        = [ \t\f\b]
 FinDeLinea      = (\r|\n|\r\n)
 
 /* Comentarios */
-Comentario      = "'" {Caracter}* {FinDeLinea}?
+Comentario      = "--" {Caracter}* {FinDeLinea}?
 
 /* identificador */
 Identificador   = [a-zA-Z][a-zA-Z0-9_]*
@@ -73,6 +73,13 @@ Identificador   = [a-zA-Z][a-zA-Z0-9_]*
 IntegerLiteral  = 0 | [1-9][0-9]*  
 Cadena          = [^\r\n\"\\]
 Caracter        = [^\r\n\'\\]
+
+/*Operadores*/
+OPREL           = ">" | "<" | "=" | ">=" | "<=" | "/="
+OPSUMA          = "+" | "-"
+OPMULT          = "*" | "/" 
+
+OPLOG           = "or" | "and" | "xor"
 
 %state STRING
 
@@ -87,7 +94,6 @@ Caracter        = [^\r\n\'\\]
     "access"                    { return symbol("ACCESS",sym.ACCESS); }
     "aliased"                   { return symbol("ALIASED",sym.ALIASED); }
     "all"                       { return symbol("ALL",sym.ALL); }
-    "and"                       { return symbol("AND",sym.AND); }
     "array"                     { return symbol("ARRAY",sym.ARRAY); }
     "at"                        { return symbol("AT",sym.AT); }
 
@@ -128,7 +134,6 @@ Caracter        = [^\r\n\'\\]
     "null"                      { return symbol("NULL",sym.NULL); }
 
     "of"                        { return symbol("OF",sym.OF); }
-    "or"                        { return symbol("OR",sym.OR); }
     "others"                    { return symbol("OTHERS",sym.OTHERS); }
     "out"                       { return symbol("OUT",sym.OUT); }
 
@@ -162,8 +167,6 @@ Caracter        = [^\r\n\'\\]
     "when"                      { return symbol("WHEN",sym.WHEN); }
     "while"                     { return symbol("WHILE",sym.WHILE); }
     "with"                      { return symbol("WITH",sym.WITH); }
-
-    "xor"                       { return symbol("XOR",sym.XOR); }
     
     /* separadores */
     "("                         { return symbol("LPAREN",sym.LPAREN); }
@@ -178,11 +181,16 @@ Caracter        = [^\r\n\'\\]
     "*"                         { return symbol("MULT",sym.MULT); }
     "/"                         { return symbol("DIV",sym.DIV); }
     "="                         { return symbol("EQ",sym.EQ); }
-    "<>"                        { return symbol("NOTEQ",sym.NOTEQ); }
+    "/="                        { return symbol("NOTEQ",sym.NOTEQ); }
     ">"                         { return symbol("GT",sym.GT); }
     "<"                         { return symbol("LT",sym.LT); }
     "<="                        { return symbol("LTEQ",sym.LTEQ); }
     ">="                        { return symbol("GTEQ",sym.GTEQ); }
+
+    "and"                       { return symbol("AND",sym.AND); }
+    "or"                        { return symbol("OR",sym.OR); }
+    "xor"                       { return symbol("XOR",sym.XOR); }
+
     
     /* cadena literal */
     "\""                        { yybegin(STRING); string.setLength(0); }
