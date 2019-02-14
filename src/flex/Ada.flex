@@ -74,6 +74,8 @@ IntegerLiteral  = 0 | [1-9][0-9]*
 Cadena          = [^\r\n\"\\]
 Caracter        = [^\r\n\'\\]
 
+//faltan asignaciones (:=) e iniciación de tipo de variable (:)
+
 /*Operadores*/
 OPREL           = ">" | "<" | "=" | ">=" | "<=" | "/="
 OPSUMA          = "+" | "-"
