@@ -5,7 +5,7 @@ import java.io.*;
 
 /* Inicializacion  */
 parser code {: 
-    public bool main = false;
+    public Object AST = null;
     public int errors = 0;
 
     public void report_error(String message, Object info) {
@@ -26,321 +26,262 @@ parser code {:
 :};
 
 /* Terminales */
-terminal EOL;
-terminal UNDERSCORE;
+terminal PUT;
+terminal GET;
+terminal COMMA;
+terminal SEMICOLON;
+terminal COLON;
+terminal LPAREN;
+terminal RPAREN;
 
-/* identificadores y procedimientos */
-//terminal MAIN;
-terminal DIM, AS;
-terminal FUNCTION, SUB; 
-terminal BYREF, BYVAL; 
-terminal END; 
-//terminal EXIT;
-//terminal RETURN;
-terminal CALL;
+/* subprogramas: funciones y procedimientos */
+terminal PROCEDURE;
+terminal FUNCTION;
+terminal IS; 
+terminal RETURN; 
+terminal IN; 
+terminal OUT;
+terminal BEGIN;
+terminal END;
 
-/* estructuras de control e iteradores */
+/* secuencias de control e iteradores */
 terminal IF;
 terminal THEN;
 terminal ELSE;
-terminal ELSEIF;
-//terminal SELECT;
-//terminal CASE;
-terminal TO;
-terminal FOR;
-//terminal STEP;
-terminal NEXT;
-terminal DO;
-terminal LOOP;
-//terminal UNTIL;
+terminal ELSIF;
 terminal WHILE;
+terminal LOOP;
+terminal EXIT;
+terminal WHEN;
+terminal FOR;
+terminal DOT_DOT;
 
 /* Operadores */
-terminal LPAREN;
-terminal RPAREN;
-terminal COMMA;
-//terminal DOT;
-
-terminal AMP;
-terminal PLUS;
-terminal MINUS;
-terminal MULT;
-terminal DIV;
-terminal EQ;
-terminal NOTEQ;
-terminal GT;
-terminal LT;
-terminal LTEQ;
-terminal GTEQ;
-
+terminal ASSIGN;    // :=
+terminal OPLOG;     // and or
+terminal OPREL;     // = /= < <= > >=
+terminal OPSUM;     // + -
+terminal OPMULT;    //* /
+terminal NOT;       //not
 
 /* literales */
-terminal BOOLEAN, INTEGER, STRING, CHAR, VARIANT;
-terminal AND, OR, NOT;
-terminal NOTHING;
+terminal BOOLEAN, INTEGER, FLOAT;
+terminal NULL;
 terminal FALSE, TRUE;
 terminal IDENTIFIER;
-terminal STRINGLITERAL;
-terminal CHARLITERAL;
-terminal INTEGERLITERAL;
+terminal STRING_LITERAL;
+terminal CHAR_LITERAL;
+terminal NUMERIC_LITERAL;
 
 /* No-Terminales */
-non terminal program; 
-non terminal Symbol modules;
-non terminal literal, type_name, type;
-//non terminal type_arguments_opt;
-//non terminal type_arguments;
-//non terminal type_argument_list;
-non terminal type_parameter_list_opt;
-non terminal type_parameter_list;
-non terminal type_parameters;
-non terminal param_modifier;
-non terminal param_type;
-non terminal type_parameter;
-non terminal declarador_variable;
-non terminal variable_ids;
-non terminal variable_type;
-non terminal variable_exp;
-non terminal declaracion_sub, declaracion_func;
-non terminal bloque;
-non terminal declaraciones, declaracion;
-non terminal declaracion_local;
-non terminal declaracion_asignacion;
-non terminal declaracion_invocacion;
-non terminal declaracion_if, declaraciones_elseif, declaracion_elseif, declaracion_else;
-non terminal declaracion_while;
-non terminal declaracion_for;
-non terminal variable_loop;
-
-non terminal expresion, expresion_simple, expresion_operacion, expresion_invocacion;
-non terminal argumentos_opt, argumentos;
-non terminal expresion_aritmetica;
-non terminal expresion_relacional;
-non terminal concatenar_multi;
-non terminal expresion_concatenar;
-non terminal expresion_logica;
-non terminal expresion_unaria, expresion_suma, expresion_multi;
+non terminal program;
+non terminal subprogram_body;
+non terminal opt_identifier;
+non terminal subprogram_specification;
+non terminal parameters_defs;
+non terminal parameter_list;
+non terminal parameter_definition;
+non terminal parameter_name_list;
+non terminal mode;
+non terminal opt_def_expression;
+non terminal declarative_part;
+non terminal declarative_item;
+non terminal object_declaration;
+non terminal identifier_list;
+non terminal sequence_of_statements;
+non terminal statement;
+non terminal null_statement;
+non terminal assignment_statement;
+non terminal return_statement;
+non terminal exit_statement;
+non terminal procedure_call_statement;
+non terminal parameter_part;
+non terminal parameters;
+non terminal if_statement;
+non terminal elsif_statements;
+non terminal else_statement;
+non terminal loop_statement;
+non terminal iterator;
+non terminal opt_expression;
+non terminal expression;
+non terminal relation;
+non terminal simple_expression;
+non terminal term;
+non terminal factor;
+non terminal primary;
+non terminal name;
+non terminal type;
 
 /* Precedencia */
-precedence left PLUS, MINUS;
-precedence left MULT, DIV; 
-precedence left OR, AND;
-precedence left NOT;
-precedence left ELSE;
-precedence left AMP;
-precedence left EQ, NOTEQ, GT, LT, LTEQ, GTEQ;
-
-
 /* Gramatica */
 start with program;
 
-program                 ::= modules
-                        //{: If (!main) report_error("not main", program); :}
-                        ;
+program                     ::= subprogram_body
+                            ;
 
-modules                 ::= declarador_variable
-                        |   declaracion_func
-                        |   declaracion_sub
-                        |   modules declarador_variable
-                        |   modules declaracion_func
-                        |   modules declaracion_sub
-                        |   error EOL
-                        ;
+subprogram_body             ::= subprogram_specification IS
+                                    declarative_part
+                                BEGIN
+                                    sequence_of_statements
+                                END opt_identifier SEMICOLON
+                            ;
 
-// Literales y Variables
+opt_identifier              ::= IDENTIFIER
+                            |
+                            ;
 
-literal                 ::= TRUE
-                        |   FALSE
-                        |   STRINGLITERAL
-                        |   CHARLITERAL
-                        |   INTEGERLITERAL
-                        |   NOTHING
-                        ;
+subprogram_specification    ::= PROCEDURE IDENTIFIER parameters_defs
+                            |   FUNCTION IDENTIFIER parameters_defs RETURN type
+                            ;
 
-//type_arguments_opt      ::= LPAREN type_argument_list RPAREN
-//                        |   
-//                        ;
+parameters_defs             ::= LPAREN parameter_list RPAREN
+                            |
+                            ;
 
-//type_arguments          ::= LPAREN type_argument_list RPAREN
-//                        ;
+parameter_list              ::= parameter_definition
+                            |   parameter_definition SEMICOLON parameter_list
+                            ;
 
-//type_argument_list      ::= type_name
-//                        |   type_argument_list COMMA type_name
-//                        ;
+parameter_definition        ::= parameter_name_list COLON mode type opt_def_expression
+                            ;
 
-type_name               ::= IDENTIFIER
-                        |   type
-                        ;
+parameter_name_list         ::= IDENTIFIER
+                            |   IDENTIFIER COMMA parameter_name_list
+                            ;
 
-type                    ::= BOOLEAN
-                        |   INTEGER
-                        |   STRING
-                        |   CHAR
-                        |   VARIANT
-                        ;
+mode                        ::= IN
+                            |   IN OUT
+                            |   OUT
+                            |
+                            ;
 
-type_parameter_list_opt ::= 
-                        |   type_parameter_list
-                        ;
+opt_def_expression          ::= ASSIGN expression
+                            |
+                            ;
 
-type_parameter_list     ::= LPAREN RPAREN 
-                        |   LPAREN type_parameters RPAREN
-                        ;
+declarative_part            ::= declarative_item declarative_part
+                            |   
+                            ;
 
-type_parameters         ::= type_parameter
-                        |   type_parameters COMMA type_parameter
-                        ;
+declarative_item            ::= object_declaration 
+                            |   subprogram_body
+                            |   error
+                            ;
 
-param_modifier          ::= 
-                        |   BYVAL
-                        |   BYREF
-                        ;
-param_type              ::= 
-                        |   AS type_name
-                        ;
+object_declaration          ::= identifier_list COLON type opt_def_expression SEMICOLON
+                            ;
 
-type_parameter          ::= param_modifier IDENTIFIER param_type;
+identifier_list             ::= IDENTIFIER
+                            |   IDENTIFIER COMMA identifier_list
+                            ;
 
-declarador_variable     ::= DIM variable_ids variable_type variable_exp EOL
-                        ;
+sequence_of_statements      ::= statement
+                            |   statement sequence_of_statements
+                            ;
 
-variable_ids            ::= IDENTIFIER
-                        |   variable_ids COMMA IDENTIFIER
-                        ;
+statement                   ::= null_statement
+                            |   assignment_statement
+                            |   return_statement
+                            |   exit_statement
+                            |   procedure_call_statement
+                            |   if_statement
+                            |   loop_statement
+                            |   PUT LPAREN expression COMMA expression RPAREN SEMICOLON
+                            |   GET LPAREN expression RPAREN SEMICOLON
+                            |   error SEMICOLON
+                            ;
 
-variable_type           ::= 
-                        |   AS type_name
-                        ;
+null_statement              ::= NULL SEMICOLON
+                            ;
 
-variable_exp            ::=
-                        |   EQ expresion
-                        ;
+assignment_statement        ::= IDENTIFIER ASSIGN expression SEMICOLON
+                            ;
 
-// procedimientos y funciones
+return_statement            ::= RETURN opt_expression SEMICOLON
+                            ;
 
-declaracion_func        ::= FUNCTION IDENTIFIER:id type_parameter_list_opt AS type_name EOL bloque END FUNCTION EOL
-                        //{: if (!main && id == "main") main = true; 
-                        //   else main = false; :}
-                        ;
+exit_statement              ::= EXIT WHEN expression
+                            ;
 
-declaracion_sub         ::= SUB IDENTIFIER type_parameter_list_opt EOL bloque END SUB EOL
-                        ;
+procedure_call_statement    ::= IDENTIFIER parameter_part SEMICOLON
+                            ;
 
-// Bloques y Declaraciones 
+parameter_part              ::= LPAREN parameters RPAREN
+                            |
+                            ;
 
-bloque                  ::= declaraciones
-                        |   
-                        ;
+parameters                  ::= expression
+                            |   expression COMMA expression
+                            ;
 
-declaraciones           ::= declaracion
-                        |   declaraciones declaracion
-                        ;
+if_statement                ::= IF expression THEN 
+                                    sequence_of_statements
+                                elsif_statements
+                                else_statement
+                                END IF SEMICOLON
+                            ;
 
-declaracion             ::= declaracion_local
-                        |   declaracion_asignacion
-                        |   declaracion_invocacion
-                        |   declaracion_if
-                        |   declaracion_while
-                        |   declaracion_for
-                        |   error EOL
-                        ;
+elsif_statements            ::= ELSIF expression THEN
+                                    sequence_of_statements
+                                elsif_statements
+                            |
+                            ;
 
-declaracion_local       ::= declarador_variable
-                        ;
+else_statement              ::= ELSE
+                                    sequence_of_statements
+                            |
+                            ;
 
-declaracion_asignacion  ::= IDENTIFIER EQ expresion EOL
-                        ;
+loop_statement              ::= iterator LOOP
+                                    sequence_of_statements
+                                END LOOP SEMICOLON
+                            ;
 
-declaracion_invocacion  ::= CALL IDENTIFIER argumentos_opt EOL
-                        |   IDENTIFIER argumentos_opt EOL
-                        ;                        
+iterator                    ::= WHILE expression
+                            |   FOR IDENTIFIER IN simple_expression DOT_DOT simple_expression
+                            |
+                            ;
 
-declaracion_if          ::= IF expresion THEN EOL bloque declaraciones_elseif declaracion_else END IF EOL
-                        ;
+opt_expression              ::= expression
+                            |
+                            ;
 
-declaraciones_elseif    ::= 
-                        |   declaraciones_elseif declaracion_elseif
-                        ;
+expression                  ::= relation
+                            |   expression OPLOG relation
+                            |   error
+                            ;
 
-declaracion_elseif      ::= ELSEIF expresion THEN EOL bloque
-                        ;
+relation                    ::= simple_expression
+                            |   simple_expression OPREL simple_expression
+                            ;
 
-declaracion_else        ::= ELSE EOL bloque
-                        ;
+simple_expression           ::= term
+                            |   simple_expression OPSUM term
+                            ;
 
-declaracion_while       ::= DO WHILE expresion EOL bloque LOOP EOL
-                        ;
+term                        ::= factor
+                            |   term OPMULT factor
+                            ;
 
-declaracion_for         ::= FOR variable_loop EQ expresion TO expresion EOL bloque NEXT EOL
-                        ;
+factor                      ::= primary
+                            |   NOT primary
+                            ;
 
-variable_loop           ::= IDENTIFIER variable_type
-                        ;
+primary                     ::= name
+                            |   NUMERIC_LITERAL
+                            |   STRING_LITERAL
+                            |   CHAR_LITERAL
+                            |   NULL
+                            |   LPAREN expression RPAREN
+                            |   TRUE
+                            |   FALSE
+                            ;
 
-// Expresiones
+name                        ::= IDENTIFIER
+                            |   name LPAREN parameters RPAREN
+                            ;
 
-expresion               ::= expresion_simple
-                        |   expresion_operacion
-                        |   expresion_invocacion
-                        |   error
-                        ;
-
-// FALTA IMPRESION, READ y WRITE ARCHIVO
-expresion_simple        ::= literal
-                        |   IDENTIFIER
-                        |   LPAREN expresion RPAREN
-                        ;
-
-argumentos_opt          ::=  
-                        |   argumentos
-                        ;
-                        
-argumentos              ::= expresion
-                        |   argumentos COMMA expresion
-                        ;
-
-expresion_invocacion    ::= IDENTIFIER LPAREN argumentos_opt RPAREN
-                        ;
-
-expresion_operacion     ::= expresion_aritmetica
-                        |   expresion_relacional
-                        |   expresion_concatenar
-                        |   expresion_logica
-                        ;
-
-expresion_aritmetica    ::= expresion_unaria
-                        |   expresion_suma
-                        |   expresion_multi
-                        ;
-
-expresion_unaria        ::= PLUS expresion
-                        |   MINUS expresion
-                        ;
-
-expresion_suma          ::= expresion PLUS expresion
-                        |   expresion MINUS expresion
-                        ;
-
-expresion_multi         ::= expresion MULT expresion
-                        |   expresion DIV expresion
-                        ;
-
-expresion_relacional    ::= expresion EQ expresion
-                        |   expresion NOTEQ expresion
-                        |   expresion LT expresion
-                        |   expresion GT expresion
-                        |   expresion LTEQ expresion
-                        |   expresion GTEQ expresion
-                        ;
-
-concatenar_multi        ::= UNDERSCORE EOL expresion
-                        |   expresion
-                        ;
-
-expresion_concatenar    ::= expresion AMP concatenar_multi
-                        ;
-
-expresion_logica        ::= NOT expresion
-                        |   expresion AND expresion
-                        |   expresion OR  expresion
-                        ;
+type                        ::= BOOLEAN
+                            |   FLOAT
+                            |   INTEGER
+                            ;

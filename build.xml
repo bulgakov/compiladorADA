@@ -84,11 +84,11 @@
     </target>
     
     <taskdef name="jflex" classname="jflex.anttask.JFlexTask" classpath="${tools}/jflex-1.6.1.jar" />
-<!--    <taskdef name="cup" classname="java_cup.anttask.CUPTask"  classpath="${tools}/java-cup-11b.jar" />-->
+    <taskdef name="cup" classname="java_cup.anttask.CUPTask"  classpath="${tools}/java-cup-11b.jar" />
 
     <target name="generate" depends="init">
         <jflex file="${jflex}/Ada.flex"  destdir="${src}" verbose="on" />
-<!--        <cup srcfile="${cup}/Ada.cup"    destdir="${src}" interface="true" parser="AdaParser" locations="false" progress="true" />-->
+        <cup srcfile="${cup}/Ada.cup"    destdir="${src}" interface="true" parser="AdaParser" locations="false" progress="true" />
     </target>
 
   
@@ -121,9 +121,9 @@
     </target>
 
     <target name="clean">
-        <delete file="${src}/com/bulgakov/compiladorvb/AdaScanner.java" />
-        <delete file="${src}/com/bulgakov/compiladorvb/AdaParser.java" />
-<!--        <delete file="${src}/com/bulgakov/compiladorvb/sym.java" />-->
+        <delete file="${src}/compiladorada/AdaScanner.java" />
+        <delete file="${src}/compiladorada/AdaParser.java" />
+        <delete file="${src}/compiladorada/sym.java" />
         <delete dir="${classes}" />
         <delete dir="${dist}" />
     </target>
