@@ -186,7 +186,7 @@ statement                   ::= null_statement
                             |   procedure_call_statement
                             |   if_statement
                             |   loop_statement
-                            |   PUT LPAREN expression COMMA expression RPAREN SEMICOLON
+                            |   PUT LPAREN expression RPAREN SEMICOLON
                             |   GET LPAREN expression RPAREN SEMICOLON
                             |   error SEMICOLON
                             ;
