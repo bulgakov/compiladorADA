@@ -1,0 +1,57 @@
+procedure CH09_1 is
+
+   Index, Count : INTEGER;
+
+begin
+   Index := 27;
+   Count := 33;
+   Put("In the main block      - values are");
+   Put(Index, 5);                             -- CH09_1.Index
+   Put(Count, 5);                             -- CH09_1.Count
+   New_Line;
+
+   declare
+      Index, Stuff : INTEGER := -345;
+
+      procedure Output_A_Line is
+      begin
+         Put_Line("This is in the new block procedure");
+      end Output_A_Line;
+
+   begin
+      Index := 157;
+      Put("In the embedded block  - values are");
+      Put(CH09_1.Index, 5);                   -- CH09_1.Index
+      Put(Index, 5);                          -- local Index
+      Put(Stuff, 5);                          -- local Stuff
+      Put(Count, 5);                          -- CH09_1.Count
+      New_Line;
+      Output_A_Line;
+   end;
+
+   Put("Back to the main block - values are");
+   Put(Index, 5);                             -- CH09_1.Index
+   Put(Count, 5);                             -- CH09_1.Count
+   New_Line;
+
+   Who:                                       -- Block name
+   declare
+      Index, Stuff : INTEGER := -345;
+   begin
+      Index := 157;
+      Put("In the block named Who - values are");
+      Put(CH09_1.Index, 5);                   -- CH09_1.Index
+      Put(Index, 5);                          -- Who.Index
+      Put(Who.Index, 5);                      -- Who.Index
+      Put(Stuff, 5);                          -- Who.Stuff
+      Put(Who.Stuff, 5);                      -- Who.Stuff
+      Put(Count, 5);                          -- CH09_1.Count
+      New_Line;
+   end Who;
+
+   Put("Back to the main block - values are");
+   Put(Index, 5);                             -- CH09_1.Index
+   Put(Count, 5);                             -- CH09_1.Count
+   New_Line;
+
+end CH09_1;

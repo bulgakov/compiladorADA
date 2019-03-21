@@ -1,0 +1,29 @@
+procedure CH08_1 is
+
+   Centigrade, Farenheit : INTEGER;
+
+   procedure Cent_To_Faren(Cent  : in     INTEGER;
+                           Faren :    out INTEGER) is
+   begin
+      Faren := 32 + Cent * 9 / 5;
+   end Cent_To_Faren;
+
+begin
+   Put("Centigrade to Farenheit temperature table");
+   New_Line(2);
+   for Count in INTEGER range -2..12 loop
+      Centigrade := 10 * Count;
+      Cent_To_Faren(Centigrade,Farenheit);
+      Put("C =");
+      Put(Centigrade,5);
+      Put("    F =");
+      Put(Farenheit,5);
+      if Centigrade = 0 then
+         Put("  Freezing point of water");
+      end if;
+      if Centigrade = 100 then
+         Put("  Boiling point of water");
+      end if;
+      New_Line;
+   end loop;
+end CH08_1;
