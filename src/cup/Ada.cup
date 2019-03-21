@@ -97,6 +97,7 @@ non terminal exit_statement;
 non terminal procedure_call_statement;
 non terminal parameter_part;
 non terminal parameters;
+non terminal put_params;
 non terminal if_statement;
 non terminal elsif_statements;
 non terminal else_statement;
@@ -179,6 +180,10 @@ sequence_of_statements      ::= statement
                             |   statement sequence_of_statements
                             ;
 
+put_params                  ::= expression
+                            |   STRING_LITERAL
+                            ;
+
 statement                   ::= null_statement
                             |   assignment_statement
                             |   return_statement
@@ -186,8 +191,8 @@ statement                   ::= null_statement
                             |   procedure_call_statement
                             |   if_statement
                             |   loop_statement
-                            |   PUT LPAREN expression RPAREN SEMICOLON
-                            |   GET LPAREN expression RPAREN SEMICOLON
+                            |   PUT LPAREN put_params RPAREN SEMICOLON
+                            |   GET LPAREN IDENTIFIER RPAREN SEMICOLON
                             |   error SEMICOLON
                             ;
 
