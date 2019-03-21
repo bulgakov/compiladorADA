@@ -1,0 +1,74 @@
+procedure Ch03_3 is
+
+   type BUG_RANGE is range -13..34;
+
+   package Bug_IO is new Ada.Text_IO.Integer_IO(BUG_RANGE);
+   use Bug_IO;
+
+   Rat : INTEGER;
+   Dog : NATURAL;
+   Cat : POSITIVE;
+   Bug : BUG_RANGE;
+
+begin
+
+   Rat := 12;
+   Dog := 23;
+   Cat := 31;
+   Bug := -11;
+
+   Put("The type INTEGER uses ");
+   Ada.Integer_Text_IO.Put(INTEGER'SIZE);
+   Put(" bits of memory,");
+   New_Line;
+   Put(" and has a range from ");
+   Put(INTEGER'FIRST);
+   Put(" to ");
+   Put(INTEGER'LAST);
+   New_Line;
+   Put(" Rat has a present value of ");
+   Put(Rat);
+   New_Line(2);
+
+   Put("The type NATURAL uses ");
+   Ada.Integer_Text_IO.Put(NATURAL'SIZE);
+   Put(" bits of memory,");
+   New_Line;
+   Put(" and has a range from ");
+   Rat := NATURAL'FIRST;
+   Put(Rat);
+   Put(" to ");
+   Rat := NATURAL'LAST;
+   Put(Rat);
+   New_Line;
+   Put(" Dog has a present value of ");
+   Put(Dog);
+   New_Line(2);
+
+   Put("The type POSITIVE uses ");
+   Ada.Integer_Text_IO.Put(POSITIVE'SIZE);
+   Put(" bits of memory,");
+   New_Line;
+   Put(" and has a range from ");
+   Put(POSITIVE'FIRST);
+   Put(" to ");
+   Put(POSITIVE'LAST);
+   New_Line;
+   Put(" Cat has a present value of ");
+   Put(Cat);
+   New_Line(2);
+
+   Put("The type BUG_RANGE uses ");
+   Bug_IO.Put(BUG_RANGE'SIZE);
+   Put(" bits of memory,");
+   New_Line;
+   Put(" and has a range from ");
+   Put(BUG_RANGE'FIRST);
+   Put(" to ");
+   Put(BUG_RANGE'LAST);
+   New_Line;
+   Put(" Bug has a present value of ");
+   Put(Bug);
+   New_Line(2);
+
+end Ch03_3;

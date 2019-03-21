@@ -1,0 +1,30 @@
+
+procedure Compares is
+
+   Index, Count           : INTEGER := 12;
+   Truth, Lies, Question  : BOOLEAN;
+
+begin
+   Truth := Index = Count;      -- This is TRUE
+   Lies := Index < Index;       -- This is FALSE
+
+                            -- Examples of all BOOLEAN operators
+   Question := Index =  Count;      -- Equality
+   Question := Index /= Count;      -- Inequality
+   Question := Index <  Count;      -- Less than
+   Question := Index <= Count;      -- Less than or equal
+   Question := Index >  Count;      -- Greater than
+   Question := Index >= Count;      -- Greater than or equal
+
+                       -- Examples of composite BOOLEAN expressions
+   Question := Index = 12 and Count = 12 and Truth and TRUE;
+   Question := Index /= 12 or FALSE or Count > 3 or Truth;
+   Question := (Truth or Lies) and (Truth and not Lies);
+   Question := Truth xor Lies;
+
+                       -- now for short circuit evaluation
+   Question := Index /= Count and then Index = 9/(Index - Count);
+   Question := Index = Count or else  Index = 9/(Index - Count);
+   Question := (Index = Count) or else (Index = 9/(Index - Count));
+
+end Compares;

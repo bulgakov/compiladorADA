@@ -1,0 +1,31 @@
+procedure valores is
+
+   One   : INTEGER := 1;
+   Two   : INTEGER := 2;
+   Three : INTEGER := 3;
+
+   Is_It : BOOLEAN := TRUE;      -- initialized
+   Which : BOOLEAN;              -- uninitialized
+
+begin
+   
+   Which := TRUE;
+   Put("Which now has the value of ");
+   Put(Which);
+   Which := FALSE;
+   Put("Which now has the value of ");
+   Put(Which);
+
+   Is_It := (One + 1) = Two;
+   Put("Is_It now has the value of ");
+   Put(Is_It);
+   Is_It := One /= Two;
+   Put("Is_It now has the value of ");
+   Put(Is_It);
+   Is_It := One + Two >= Three;
+   Put("Is_It now has the value of ");
+   Put(Is_It);
+   --fin de valores
+   --
+
+end valores;
