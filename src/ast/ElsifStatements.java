@@ -11,6 +11,6 @@ import java.util.*;
  * @author mijail
  */
 public class ElsifStatements {
-    List<ElsifStatement> ElsifStatements;
+    public List<ElsifStatement> ElsifStatements;
     public ElsifStatements(){ ElsifStatements = new ArrayList<>(); }
 }

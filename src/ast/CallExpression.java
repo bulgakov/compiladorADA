@@ -10,7 +10,7 @@ package ast;
  * @author mijail
  */
 public class CallExpression extends Expression {
-    public Identifier Identifier;
+    public Expression Identifier;
     public Parameters Parameters;
-    public CallExpression(Identifier i, Parameters p) { Identifier=i; Parameters=p; }
+    public CallExpression(Expression i, Parameters p) { Identifier=i; Parameters=p; }
 }

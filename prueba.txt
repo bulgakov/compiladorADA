@@ -1,30 +1,30 @@
--- Integer calculator program.  Takes lines of input consisting of
--- <operator> <number>, and applies each one to a display value.  The
--- display value is printed at each step.  The operator is one of =,
--- +, -, *, /, or ^, which correspond to assign, add, subtract, multiply
--- divide, and raise, respectively.  The display value is initially zero.
--- The program terminates on a input of q.
---
-with Text_IO;
-with Gnat.Io; use Gnat.Io;
-procedure Calc is
-   Op: Character;               -- Operation to perform.
-   Disp: Integer := 0;          -- Contents of the display.
-   In_Val: Integer;             -- Input value used to update the display.
+
+procedure Compares is
+
+   Index, Count           : INTEGER := 12;
+   Truth, Lies, Question  : BOOLEAN;
+
 begin
-   loop
-      -- Print the display.
-      Put(Disp);
-      New_Line;
+   Truth := Index = Count;      -- This is TRUE
+   Lies := Index < Index;       -- This is FALSE
 
-      -- Promt the user.
-      Put("> ");
+                            -- Examples of all BOOLEAN operators
+   Question := Index =  Count;      -- Equality
+   Question := Index /= Count;      -- Inequality
+   Question := Index <  Count;      -- Less than
+   Question := Index <= Count;      -- Less than or equal
+   Question := Index >  Count;      -- Greater than
+   Question := Index >= Count;      -- Greater than or equal
 
-      -- Skip leading blanks and read the operation.
-      loop
-         Get(Op);
-         exit when Op /= ' ';
-      end loop;
+                       -- Examples of composite BOOLEAN expressions
+   Question := Index = 12 and Count = 12 and Truth and TRUE;
+   Question := Index /= 12 or FALSE or Count > 3 or Truth;
+   Question := (Truth or Lies) and (Truth and not Lies);
+   Question := Truth and Lies;
 
-      -- Stop when we're s'posed to.
-      exit when Op = 'Q' or Op = 'q';
+                       -- now for short circuit evaluation
+   Question := Index /= Count and Index = 9/(Index - Count);
+   Question := Index = Count or Index = 9/(Index - Count);
+   Question := (Index = Count) or (Index = 9/(Index - Count));
+
+end Compares;

@@ -5,10 +5,13 @@
  */
 package ast;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author mijail
  */
+@XmlRootElement
 public class Program {
     public SubProgramBody SubProgramBody;
     public Program(SubProgramBody s) { SubProgramBody = s; }

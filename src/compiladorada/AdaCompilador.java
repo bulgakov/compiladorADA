@@ -5,8 +5,13 @@
  */
 package compiladorada;
 
+import java.io.File;
 import java.io.FileReader;
+import java.io.StringWriter;
 import java_cup.runtime.ComplexSymbolFactory;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 /**
  *
@@ -28,10 +33,30 @@ public class AdaCompilador {
 //                System.out.println(token.toString());
             AdaParser parser = new AdaParser(scanner,csf);
             parser.parse();
+            
+            if(parser.AST != null)
+                System.out.println(parser.AST.toString());//jaxbObjectToXML(parser.AST);
         } catch (Exception e) {
             e.printStackTrace(System.out);
             System.exit(1);
         }
     }
     
+    private static String jaxbObjectToXML(ast.Program ast) {
+        String xmlString = "";
+        try {
+            JAXBContext context = JAXBContext.newInstance(ast.Program.class);
+            Marshaller m = context.createMarshaller();
+
+            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // To format XML
+
+            StringWriter sw = new StringWriter();
+            m.marshal(ast, sw);
+            xmlString = sw.toString();
+
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+        return xmlString;
+    }
 }

@@ -61,234 +61,335 @@ terminal DOT_DOT;
 
 /* Operadores */
 terminal ASSIGN;    // :=
-terminal OPLOG;     // and or
-terminal OPREL;     // = /= < <= > >=
-terminal OPSUM;     // + -
-terminal OPMULT;    //* /
+terminal String OPLOG;     // and or
+terminal String OPREL;     // = /= < <= > >=
+terminal String OPSUM;     // + -
+terminal String OPMULT;    //* /
 terminal NOT;       //not
 
 /* literales */
 terminal BOOLEAN, INTEGER, FLOAT;
 terminal NULL;
 terminal FALSE, TRUE;
-terminal IDENTIFIER;
+terminal String IDENTIFIER;
 terminal String STRING_LITERAL;
-terminal Integer FLOAT_LITERAL;
-terminal Float INTEGER_LITERAL;
+terminal Float FLOAT_LITERAL;
+terminal Integer INTEGER_LITERAL;
 
 /* No-Terminales */
-non terminal program;
-non terminal subprogram_body;
-non terminal opt_identifier;
-non terminal subprogram_specification;
-non terminal parameters_defs;
-non terminal parameter_list;
-non terminal parameter_definition;
-non terminal parameter_name_list;
-non terminal mode;
-non terminal opt_def_expression;
-non terminal declarative_part;
-non terminal declarative_item;
-non terminal object_declaration;
-non terminal identifier_list;
-non terminal sequence_of_statements;
-non terminal statement;
-non terminal null_statement;
-non terminal assignment_statement;
-non terminal return_statement;
-non terminal exit_statement;
-non terminal procedure_call_statement;
-non terminal parameter_part;
-non terminal parameters;
-non terminal put_params;
-non terminal if_statement;
-non terminal elsif_statements;
-non terminal else_statement;
-non terminal loop_statement;
-non terminal iterator;
-non terminal opt_expression;
-non terminal expression;
-non terminal relation;
-non terminal simple_expression;
-non terminal term;
-non terminal factor;
-non terminal primary;
-non terminal name;
-non terminal type;
+non terminal Program program;
+non terminal SubProgramBody subprogram_body;
+non terminal Identifier opt_identifier;
+non terminal SubProgramSpecification subprogram_specification;
+non terminal ParametersDefs parameters_defs;
+non terminal ParameterList parameter_list;
+non terminal ParameterDefinition parameter_definition;
+non terminal ParameterNameList parameter_name_list;
+non terminal Mode mode;
+non terminal Expression opt_def_expression;
+non terminal DeclarativePart declarative_part;
+non terminal DeclarativeItem declarative_item;
+non terminal ObjectDeclarativeItem object_declaration;
+non terminal IdentifierList identifier_list;
+non terminal SequenceOfStatements sequence_of_statements;
+non terminal Statement statement;
+non terminal NullStatement null_statement;
+non terminal AssignStatement assignment_statement;
+non terminal ReturnStatement return_statement;
+non terminal ExitStatement exit_statement;
+non terminal ProcedureCallStatement procedure_call_statement;
+non terminal ParameterPart parameter_part;
+non terminal Parameters parameters;
+non terminal PutParam put_params;
+non terminal IfStatement if_statement;
+non terminal ElsifStatements elsif_statements;
+non terminal ElseStatement else_statement;
+non terminal LoopStatement loop_statement;
+non terminal IteratorPart iterator;
+non terminal Expression opt_expression;
+non terminal Expression expression;
+non terminal Expression relation;
+non terminal Expression simple_expression;
+non terminal Expression term;
+non terminal Expression factor;
+non terminal Expression primary;
+non terminal Expression name;
+non terminal Type type;
 
 /* Precedencia */
 /* Gramatica */
 start with program;
 
-program                     ::= subprogram_body
+program                     ::= subprogram_body:s
+                            {: AST = new Program(s);
+                               RESULT = AST; :}
                             ;
 
-subprogram_body             ::= subprogram_specification IS
-                                    declarative_part
+subprogram_body             ::= subprogram_specification:s IS
+                                    declarative_part:d
                                 BEGIN
-                                    sequence_of_statements
+                                    sequence_of_statements:sq
                                 END opt_identifier SEMICOLON
+                            {: RESULT = new SubProgramBody(s,d,sq); :}
                             ;
 
-opt_identifier              ::= IDENTIFIER
+opt_identifier              ::= IDENTIFIER:i
+                            {: RESULT = new Identifier(i); :}
                             |
+                            {: RESULT = null; :}
                             ;
 
-subprogram_specification    ::= PROCEDURE IDENTIFIER parameters_defs
-                            |   FUNCTION IDENTIFIER parameters_defs RETURN type
+subprogram_specification    ::= PROCEDURE IDENTIFIER:i parameters_defs:p
+                            {: RESULT = new SubProgramSpecification("PROCEDURE", new Identifier(i), p, null); :}
+                            |   FUNCTION IDENTIFIER:i parameters_defs:p RETURN type:t
+                            {: RESULT = new SubProgramSpecification("FUNCTION", new Identifier(i), p, t); :}
                             ;
 
-parameters_defs             ::= LPAREN parameter_list RPAREN
+parameters_defs             ::= LPAREN parameter_list:p RPAREN
+                            {: RESULT = new ParametersDefs(p); :}
                             |
+                            {: RESULT = null; :}
                             ;
 
-parameter_list              ::= parameter_definition
-                            |   parameter_definition SEMICOLON parameter_list
+parameter_list              ::= parameter_definition:pd
+                            {: ParameterList list = new ParameterList();
+                               list.Parameters.add(pd);
+                               RESULT = list; :}
+                            |   parameter_definition:pd SEMICOLON parameter_list:l
+                            {: l.Parameters.add(pd);
+                               RESULT = l; :}
                             ;
 
-parameter_definition        ::= parameter_name_list COLON mode type opt_def_expression
+parameter_definition        ::= parameter_name_list:l COLON mode:m type:t opt_def_expression:e
+                            {: RESULT = new ParameterDefinition(l,m,t,e); :}
                             ;
 
-parameter_name_list         ::= IDENTIFIER
-                            |   IDENTIFIER COMMA parameter_name_list
+parameter_name_list         ::= IDENTIFIER:i
+                            {: ParameterNameList list = new ParameterNameList();
+                               list.Identifiers.add(new Identifier(i));
+                               RESULT = list; :}
+                            |   IDENTIFIER:i COMMA parameter_name_list:l
+                            {: l.Identifiers.add(new Identifier(i));
+                               RESULT = l; :}
                             ;
 
 mode                        ::= IN
+                            {: RESULT = new InMode(); :}
                             |   IN OUT
+                            {: RESULT = new InOutMode(); :}
                             |   OUT
+                            {: RESULT = new OutMode(); :}
                             |
+                            {: RESULT = null; :}
                             ;
 
-opt_def_expression          ::= ASSIGN expression
+opt_def_expression          ::= ASSIGN expression:e
+                            {: RESULT = e; :}
                             |
+                            {: RESULT = null; :}
                             ;
 
-declarative_part            ::= declarative_item declarative_part
+declarative_part            ::= declarative_item:i declarative_part:d
+                            {: d.Items.add(i);
+                               RESULT = d; :}
                             |   
+                            {: RESULT = new DeclarativePart(); :}
                             ;
 
-declarative_item            ::= object_declaration 
-                            |   subprogram_body
+declarative_item            ::= object_declaration:o 
+                            {: RESULT = o; :}
+                            |   subprogram_body:s
+                            {: RESULT = s; :}
                             |   error
+                            {: RESULT = null; :}
                             ;
 
-object_declaration          ::= identifier_list COLON type opt_def_expression SEMICOLON
+object_declaration          ::= identifier_list:l COLON type:t opt_def_expression:e SEMICOLON
+                            {: RESULT = new ObjectDeclarativeItem(l,t,e); :}
                             ;
 
-identifier_list             ::= IDENTIFIER
-                            |   IDENTIFIER COMMA identifier_list
+identifier_list             ::= IDENTIFIER:i
+                            {: IdentifierList list = new IdentifierList();
+                               list.Identifiers.add(new Identifier(i));
+                               RESULT = list; :}
+                            |   IDENTIFIER:i COMMA identifier_list:l
+                            {: l.Identifiers.add(new Identifier(i));
+                               RESULT = l; :}
                             ;
 
-sequence_of_statements      ::= statement
-                            |   statement sequence_of_statements
+sequence_of_statements      ::= statement:s
+                            {: SequenceOfStatements sq = new SequenceOfStatements();
+                               sq.Statements.add(s);
+                               RESULT = sq; :}
+                            |   statement:s sequence_of_statements:sq
+                            {: sq.Statements.add(s);
+                               RESULT = sq; :}
                             ;
 
-put_params                  ::= expression
-                            |   STRING_LITERAL
+put_params                  ::= expression:e
+                            {: RESULT = new PutParam(e); :}
+                            |   STRING_LITERAL:s
+                            {: RESULT = new PutParam(new StringLiteral(s)); :}
                             ;
 
 statement                   ::= null_statement
-                            |   assignment_statement
-                            |   return_statement
-                            |   exit_statement
-                            |   procedure_call_statement
-                            |   if_statement
-                            |   loop_statement
-                            |   PUT LPAREN put_params RPAREN SEMICOLON
-                            |   GET LPAREN IDENTIFIER RPAREN SEMICOLON
+                            {: RESULT = new NullStatement(); :}
+                            |   assignment_statement:s
+                            {: RESULT = s; :}
+                            |   return_statement:s
+                            {: RESULT = s; :}
+                            |   exit_statement:s
+                            {: RESULT = s; :}
+                            |   procedure_call_statement:s
+                            {: RESULT = s; :}
+                            |   if_statement:s
+                            {: RESULT = s; :}
+                            |   loop_statement:s
+                            {: RESULT = s; :}
+                            |   PUT LPAREN put_params:p RPAREN SEMICOLON
+                            {: RESULT = new PutStatement(p); :}
+                            |   GET LPAREN IDENTIFIER:i RPAREN SEMICOLON
+                            {: RESULT = new GetStatement(new Identifier(i)); :}
                             |   error SEMICOLON
+                            {: RESULT = null; :}
                             ;
 
 null_statement              ::= NULL SEMICOLON
                             ;
 
-assignment_statement        ::= IDENTIFIER ASSIGN expression SEMICOLON
+assignment_statement        ::= IDENTIFIER:i ASSIGN expression:e SEMICOLON
+                            {: RESULT = new AssignStatement(new Identifier(i),e); :}
                             ;
 
-return_statement            ::= RETURN opt_expression SEMICOLON
+return_statement            ::= RETURN opt_expression:e SEMICOLON
+                            {: RESULT = new ReturnStatement(e); :}
                             ;
 
-exit_statement              ::= EXIT WHEN expression
+exit_statement              ::= EXIT WHEN expression:e
+                            {: RESULT = new ExitStatement(e); :}
                             ;
 
-procedure_call_statement    ::= IDENTIFIER parameter_part SEMICOLON
+procedure_call_statement    ::= IDENTIFIER:i parameter_part:p SEMICOLON
+                            {: RESULT = new ProcedureCallStatement(new Identifier(i), p); :}
                             ;
 
-parameter_part              ::= LPAREN parameters RPAREN
+parameter_part              ::= LPAREN parameters:p RPAREN
+                            {: RESULT = new ParameterPart(p); :}
                             |
+                            {: RESULT = null; :}
                             ;
 
-parameters                  ::= expression
-                            |   parameters COMMA expression
+parameters                  ::= expression:e
+                            {: Parameters p = new Parameters();
+                               p.Parameters.add(e);
+                               RESULT = p; :}
+                            |   parameters:p COMMA expression:e
+                            {: p.Parameters.add(e);
+                               RESULT = p; :}
                             ;
 
-if_statement                ::= IF expression THEN 
-                                    sequence_of_statements
-                                elsif_statements
-                                else_statement
+if_statement                ::= IF expression:e THEN 
+                                    sequence_of_statements:sq
+                                elsif_statements:elsifs
+                                else_statement:els
                                 END IF SEMICOLON
+                            {: RESULT = new IfStatement(e,sq,elsifs,els); :}
                             ;
 
-elsif_statements            ::= ELSIF expression THEN
-                                    sequence_of_statements
-                                elsif_statements
+elsif_statements            ::= ELSIF expression:e THEN
+                                    sequence_of_statements:sq
+                                elsif_statements:elsifs
+                            {: elsifs.ElsifStatements.add(new ElsifStatement(e,sq));
+                               RESULT = elsifs; :}
                             |
+                            {: RESULT = new ElsifStatements(); :}
                             ;
 
 else_statement              ::= ELSE
-                                    sequence_of_statements
+                                    sequence_of_statements:sq
+                            {: RESULT = new ElseStatement(sq); :}
                             |
+                            {: RESULT = null; :}
                             ;
 
-loop_statement              ::= iterator LOOP
-                                    sequence_of_statements
+loop_statement              ::= iterator:i LOOP
+                                    sequence_of_statements:sq
                                 END LOOP SEMICOLON
+                            {: RESULT = new LoopStatement(i, sq); :}
                             ;
 
-iterator                    ::= WHILE expression
-                            |   FOR IDENTIFIER IN simple_expression DOT_DOT simple_expression
+iterator                    ::= WHILE expression:e
+                            {: RESULT = new IteratorPart("WHILE", null, e, null); :}
+                            |   FOR IDENTIFIER:i IN simple_expression:e1 DOT_DOT simple_expression:e2
+                            {: RESULT = new IteratorPart("FOR", new Identifier(i), e1, e2); :}
                             |
+                            {: RESULT = null; :}
                             ;
 
-opt_expression              ::= expression
+opt_expression              ::= expression:e
+                            {: RESULT = e; :}
                             |
+                            {: RESULT = null; :}
                             ;
 
-expression                  ::= relation
-                            |   expression OPLOG relation
+expression                  ::= relation:r
+                            {: RESULT = r; :}
+                            |   expression:e1 OPLOG:o relation:e2
+                            {: RESULT = new LogicalExpression(o,e1,e2); :}
                             |   error
+                            {: RESULT = null; :}
                             ;
 
-relation                    ::= simple_expression
-                            |   simple_expression OPREL simple_expression
+relation                    ::= simple_expression:e
+                            {: RESULT = e; :}
+                            |   simple_expression:e1 OPREL:o simple_expression:e2
+                            {: RESULT = new AritmeticExpression(o,e1,e2); :}
                             ;
 
-simple_expression           ::= term
-                            |   simple_expression OPSUM term
+simple_expression           ::= term:t
+                            {: RESULT = t; :}
+                            |   simple_expression:e1 OPSUM:o term:e2
+                            {: RESULT = new AritmeticExpression(o,e1,e2); :}
                             ;
 
-term                        ::= factor
-                            |   term OPMULT factor
+term                        ::= factor:f
+                            {: RESULT = f; :}
+                            |   term:e1 OPMULT:o factor:e2
+                            {: RESULT = new AritmeticExpression(o,e1,e2); :}
                             ;
 
-factor                      ::= primary
-                            |   NOT primary
+factor                      ::= primary:p
+                            {: RESULT = p; :}
+                            |   NOT primary:p
+                            {: RESULT = new NotExpression(p); :}
                             ;
 
-primary                     ::= name
-                            |   INTEGER_LITERAL
-                            |   FLOAT_LITERAL
+primary                     ::= name:n
+                            {: RESULT = n; :}
+                            |   INTEGER_LITERAL:i
+                            {: RESULT = new IntegerLiteral(i.intValue()); :}
+                            |   FLOAT_LITERAL:f
+                            {: RESULT = new FloatLiteral(f.floatValue()); :}
                             |   NULL
-                            |   LPAREN expression RPAREN
+                            {: RESULT = new Null(); :}
+                            |   LPAREN expression:e RPAREN
+                            {: RESULT = e; :}
                             |   TRUE
+                            {: RESULT = new True(); :}
                             |   FALSE
+                            {: RESULT = new False(); :}
                             ;
 
-name                        ::= IDENTIFIER
-                            |   name LPAREN parameters RPAREN
+name                        ::= IDENTIFIER:i
+                            {: RESULT = new IdentifierExpression(new Identifier(i)); :}
+                            |   name:n LPAREN parameters:p RPAREN
+                            {: RESULT = new CallExpression(n,p); :}
                             ;
 
 type                        ::= BOOLEAN
+                            {: RESULT = new BooleanType(); :}
                             |   FLOAT
+                            {: RESULT = new FloatType(); :}
                             |   INTEGER
+                            {: RESULT = new IntegerType(); :}
                             ;
