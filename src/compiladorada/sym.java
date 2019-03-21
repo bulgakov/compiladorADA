@@ -12,7 +12,6 @@ public interface sym {
   public static final int STRING_LITERAL = 40;
   public static final int FUNCTION = 10;
   public static final int OPSUM = 30;
-  public static final int CHAR_LITERAL = 41;
   public static final int PUT = 2;
   public static final int ELSIF = 20;
   public static final int INTEGER = 34;
@@ -35,7 +34,6 @@ public interface sym {
   public static final int IF = 17;
   public static final int EOF = 0;
   public static final int BOOLEAN = 33;
-  public static final int NUMERIC_LITERAL = 42;
   public static final int RETURN = 12;
   public static final int TRUE = 38;
   public static final int error = 1;
@@ -47,9 +45,11 @@ public interface sym {
   public static final int THEN = 18;
   public static final int END = 16;
   public static final int OPLOG = 28;
+  public static final int FLOAT_LITERAL = 41;
   public static final int FALSE = 37;
   public static final int OPMULT = 31;
   public static final int PROCEDURE = 9;
+  public static final int INTEGER_LITERAL = 42;
   public static final int IDENTIFIER = 39;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -93,8 +93,8 @@ public interface sym {
   "TRUE",
   "IDENTIFIER",
   "STRING_LITERAL",
-  "CHAR_LITERAL",
-  "NUMERIC_LITERAL"
+  "FLOAT_LITERAL",
+  "INTEGER_LITERAL"
   };
 }
 

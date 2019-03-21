@@ -67,10 +67,11 @@ FinDeLinea      = (\r|\n|\r\n)
 Comentario      = "--" {Caracter}* {FinDeLinea}
 
 /* identificador */
-Identificador   = [a-zA-Z]([_][a-zA-Z0-9]+)*
+Identificador   = [a-zA-Z]+([_][a-zA-Z0-9]+)*
 
 /* Literales */
-IntegerLiteral  = 0 | [1-9][0-9]*  
+IntegerLiteral  = [0-9]+  
+FloatLiteral    = [0-9]+"."[0-9]*  
 Cadena          = [^\r\n\"\\]
 Caracter        = [^\r\n\'\\]
 
@@ -139,7 +140,8 @@ NOT             = "not"
     /* cadena literal */
     "\""                        { yybegin(STRING); string.setLength(0); }
 
-    {IntegerLiteral}            { return symbol("NUMERIC_LITERAL",sym.NUMERIC_LITERAL, new Integer(yytext())); }
+    {IntegerLiteral}            { return symbol("INTEGER_LITERAL",sym.INTEGER_LITERAL, new Integer(yytext())); }
+    {FloatLiteral}              { return symbol("FLOAT_LITERAL",sym.FLOAT_LITERAL, new Float(yytext())); }
 
     {Comentario}                { }
     {Espacios}+                 { }
@@ -153,19 +155,12 @@ NOT             = "not"
 }
 
 <STRING> {
-    "\""                        { yybegin(YYINITIAL); if (string.length() == 1) return symbol("CHAR_LITERAL",sym.CHAR_LITERAL, string.toString()); else return symbol("STRING_LITERAL",sym.STRING_LITERAL, string.toString()); }
+    "\""                        { yybegin(YYINITIAL); return symbol("STRING_LITERAL",sym.STRING_LITERAL, string.toString()); }
   
     {Cadena}+                   { string.append( yytext() ); }
   
     /* escape sequences */
-    "\\b"                       { string.append( '\b' ); }
-    "\\t"                       { string.append( '\t' ); }
-    "\\n"                       { string.append( '\n' ); }
-    "\\f"                       { string.append( '\f' ); }
-    "\\r"                       { string.append( '\r' ); }
-    "\\\""                      { string.append( '\"' ); }
-    "\\'"                       { string.append( '\'' ); }
-    "\\\\"                      { string.append( '\\' ); }
+    "\"\""                      { string.append( "\"\"" ); }
 
     /* errores */
     \\.                         { System.out.println("Caracter no valido \""+yytext()+"\""); 
