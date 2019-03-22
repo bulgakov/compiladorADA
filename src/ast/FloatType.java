@@ -5,8 +5,11 @@
  */
 package ast;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author mijail
  */
-public class FloatType extends Type {}
+@XmlRootElement
+public class FloatType extends Type { public FloatType(){} }

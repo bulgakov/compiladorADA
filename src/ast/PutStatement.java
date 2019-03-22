@@ -5,11 +5,21 @@
  */
 package ast;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author mijail
  */
+@XmlRootElement
 public class PutStatement extends Statement {
+    @XmlElement
     public PutParam param;
+    
+    private PutStatement() {  // makes JAXB happy, will never be invoked
+        this(null);   // ...therefore it doesn't matter what it creates
+    }
+    
     public PutStatement(PutParam p) { param = p; }
 }

@@ -5,11 +5,21 @@
  */
 package ast;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author mijai
  */
+@XmlRootElement
 public class GetStatement extends Statement {
+    @XmlElement
     public Identifier Identifier;
+    
+    private GetStatement() {  // makes JAXB happy, will never be invoked
+        this(null);   // ...therefore it doesn't matter what it creates
+    }
+    
     public GetStatement(Identifier i) { Identifier=i; }
 }

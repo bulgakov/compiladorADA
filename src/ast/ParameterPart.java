@@ -5,11 +5,21 @@
  */
 package ast;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author mijail
  */
+@XmlRootElement
 public class ParameterPart {
+    @XmlElement
     public Parameters Parameters;
+    
+    private ParameterPart() {  // makes JAXB happy, will never be invoked
+        this(null);   // ...therefore it doesn't matter what it creates
+    }
+    
     public ParameterPart(Parameters p) { Parameters=p; }
 }

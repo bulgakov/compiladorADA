@@ -5,8 +5,11 @@
  */
 package ast;
 
+import javax.xml.bind.annotation.XmlSeeAlso;
+
 /**
  *
  * @author mijail
  */
+@XmlSeeAlso({ObjectDeclarativeItem.class, SubProgramBody.class})
 public abstract class DeclarativeItem {}

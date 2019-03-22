@@ -346,7 +346,9 @@ relation                    ::= simple_expression:e
                             {: RESULT = new AritmeticExpression(o,e1,e2); :}
                             ;
 
-simple_expression           ::= term:t
+simple_expression           ::= OPSUM:o term:t
+                            {: RESULT = new UnaryExpression(o,t); :}
+                            |   term:t
                             {: RESULT = t; :}
                             |   simple_expression:e1 OPSUM:o term:e2
                             {: RESULT = new AritmeticExpression(o,e1,e2); :}

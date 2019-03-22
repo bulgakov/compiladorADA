@@ -5,8 +5,11 @@
  */
 package ast;
 
+import javax.xml.bind.annotation.XmlSeeAlso;
+
 /**
  *
  * @author mijail
  */
+@XmlSeeAlso({False.class,True.class,Null.class,LogicalExpression.class,RelationExpression.class,AritmeticExpression.class,NotExpression.class,UnaryExpression.class,CallExpression.class,StringLiteral.class,FloatLiteral.class,IntegerLiteral.class,IdentifierExpression.class})
 public abstract class Expression {}

@@ -5,10 +5,14 @@
  */
 package ast;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author mijail
  */
+@XmlRootElement
 public class NullStatement extends Statement {
+    
     public NullStatement(){}
 }

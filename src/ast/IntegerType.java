@@ -5,8 +5,12 @@
  */
 package ast;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author mijail
  */
-public class IntegerType extends Type {}
+@XmlRootElement
+public class IntegerType extends Type { public IntegerType(){} }

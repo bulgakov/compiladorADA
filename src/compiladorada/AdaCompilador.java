@@ -26,7 +26,7 @@ public class AdaCompilador {
         // TODO code application logic here
         try {
             ComplexSymbolFactory csf = new ComplexSymbolFactory();
-            AdaScanner scanner = new AdaScanner(new java.io.FileReader(args[0]), csf);
+            AdaScanner scanner = new AdaScanner(new FileReader(args[0]), csf);
 //            scanner.yybegin(0);
 //            java_cup.runtime.Symbol token;
 //            while((token=scanner.next_token()).sym != sym.EOF)
@@ -35,7 +35,7 @@ public class AdaCompilador {
             parser.parse();
             
             if(parser.AST != null)
-                System.out.println(parser.AST.toString());//jaxbObjectToXML(parser.AST);
+                jaxbObjectToXML(parser.AST);
         } catch (Exception e) {
             e.printStackTrace(System.out);
             System.exit(1);
@@ -45,12 +45,16 @@ public class AdaCompilador {
     private static String jaxbObjectToXML(ast.Program ast) {
         String xmlString = "";
         try {
+            File file = new File("Program.xml");
+            if (file.exists()) file.delete();
             JAXBContext context = JAXBContext.newInstance(ast.Program.class);
             Marshaller m = context.createMarshaller();
 
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // To format XML
 
             StringWriter sw = new StringWriter();
+            m.marshal(ast, file);
+            m.marshal(ast, System.out);
             m.marshal(ast, sw);
             xmlString = sw.toString();
 

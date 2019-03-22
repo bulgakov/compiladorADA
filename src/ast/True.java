@@ -5,10 +5,15 @@
  */
 package ast;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author mijail
  */
+@XmlRootElement
 public class True extends Expression {
+    
     public True(){}
 }

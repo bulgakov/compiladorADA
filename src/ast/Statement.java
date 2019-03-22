@@ -5,8 +5,11 @@
  */
 package ast;
 
+import javax.xml.bind.annotation.XmlSeeAlso;
+
 /**
  *
  * @author mijail
  */
+@XmlSeeAlso({NullStatement.class,AssignStatement.class,ExitStatement.class,ReturnStatement.class,GetStatement.class,PutStatement.class,IfStatement.class,LoopStatement.class,ProcedureCallStatement.class})
 public abstract class Statement {}

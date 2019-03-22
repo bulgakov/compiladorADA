@@ -4,13 +4,19 @@
  * and open the template in the editor.
  */
 package ast;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.*;
 
 /**
  *
  * @author mijail
  */
+@XmlRootElement
 public class SequenceOfStatements { 
+    @XmlElement
     public List<Statement> Statements;
+    
     public SequenceOfStatements(){ Statements = new ArrayList<>(); }
 }

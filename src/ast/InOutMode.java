@@ -5,8 +5,12 @@
  */
 package ast;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author mijail
  */
-public class InOutMode extends Mode {}
+@XmlRootElement
+public class InOutMode extends Mode { public InOutMode(){} }

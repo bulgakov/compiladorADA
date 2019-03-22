@@ -1,30 +1,29 @@
+procedure CH08_1 is
 
-procedure Compares is
+   Centigrade, Farenheit : INTEGER;
 
-   Index, Count           : INTEGER := 12;
-   Truth, Lies, Question  : BOOLEAN;
+   procedure Cent_To_Faren(Cent  : in     INTEGER;
+                           Faren :    out INTEGER) is
+   begin
+      Faren := 32 + Cent * 9 / 5;
+   end Cent_To_Faren;
 
 begin
-   Truth := Index = Count;      -- This is TRUE
-   Lies := Index < Index;       -- This is FALSE
-
-                            -- Examples of all BOOLEAN operators
-   Question := Index =  Count;      -- Equality
-   Question := Index /= Count;      -- Inequality
-   Question := Index <  Count;      -- Less than
-   Question := Index <= Count;      -- Less than or equal
-   Question := Index >  Count;      -- Greater than
-   Question := Index >= Count;      -- Greater than or equal
-
-                       -- Examples of composite BOOLEAN expressions
-   Question := Index = 12 and Count = 12 and Truth and TRUE;
-   Question := Index /= 12 or FALSE or Count > 3 or Truth;
-   Question := (Truth or Lies) and (Truth and not Lies);
-   Question := Truth and Lies;
-
-                       -- now for short circuit evaluation
-   Question := Index /= Count and Index = 9/(Index - Count);
-   Question := Index = Count or Index = 9/(Index - Count);
-   Question := (Index = Count) or (Index = 9/(Index - Count));
-
-end Compares;
+   Put("Centigrade to Farenheit temperature table");
+   New_Line(2);
+   for Count in -2..12 loop
+      Centigrade := 10 * Count;
+      Cent_To_Faren(Centigrade,Farenheit);
+      Put("C =");
+      Put(Centigrade);
+      Put("    F =");
+      Put(Farenheit);
+      if Centigrade = 0 then
+         Put("  Freezing point of water");
+      end if;
+      if Centigrade = 100 then
+         Put("  Boiling point of water");
+      end if;
+      New_Line;
+   end loop;
+end CH08_1;

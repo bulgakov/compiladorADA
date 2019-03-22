@@ -67,11 +67,11 @@ FinDeLinea      = (\r|\n|\r\n)
 Comentario      = "--" {Caracter}* {FinDeLinea}
 
 /* identificador */
-Identificador   = [a-zA-Z]+([_][a-zA-Z0-9]+)*
+Identificador   = [a-zA-Z]+([_]?[a-zA-Z0-9]+)*
 
 /* Literales */
 IntegerLiteral  = [0-9]+  
-FloatLiteral    = [0-9]+"."[0-9]*  
+FloatLiteral    = [0-9]+"."[0-9]+  
 Cadena          = [^\r\n\"\\]
 Caracter        = [^\r\n\'\\]
 
@@ -90,8 +90,8 @@ NOT             = "not"
 
 <YYINITIAL> {
     /* palabras reservadas */
-    "put"                       { return symbol("PUT",sym.GET); }
-    "get"                       { return symbol("GET",sym.PUT); }
+    "put"                       { return symbol("PUT",sym.PUT); }
+    "get"                       { return symbol("GET",sym.GET); }
     
     ","                         { return symbol("COMMA",sym.COMMA); }
     ";"                         { return symbol("SEMICOLON",sym.SEMICOLON); }
@@ -138,7 +138,7 @@ NOT             = "not"
     {NOT}                       { return symbol("NOT",sym.NOT,yytext()); }
     
     /* cadena literal */
-    "\""                        { yybegin(STRING); string.setLength(0); }
+    \"                        { yybegin(STRING); string.setLength(0); }
 
     {IntegerLiteral}            { return symbol("INTEGER_LITERAL",sym.INTEGER_LITERAL, new Integer(yytext())); }
     {FloatLiteral}              { return symbol("FLOAT_LITERAL",sym.FLOAT_LITERAL, new Float(yytext())); }
@@ -155,12 +155,9 @@ NOT             = "not"
 }
 
 <STRING> {
-    "\""                        { yybegin(YYINITIAL); return symbol("STRING_LITERAL",sym.STRING_LITERAL, string.toString()); }
+    \"                        { yybegin(YYINITIAL); return symbol("STRING_LITERAL",sym.STRING_LITERAL, string.toString()); }
   
     {Cadena}+                   { string.append( yytext() ); }
-  
-    /* escape sequences */
-    "\"\""                      { string.append( "\"\"" ); }
 
     /* errores */
     \\.                         { System.out.println("Caracter no valido \""+yytext()+"\""); 

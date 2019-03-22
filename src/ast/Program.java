@@ -5,6 +5,7 @@
  */
 package ast;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -13,6 +14,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class Program {
+    @XmlElement
     public SubProgramBody SubProgramBody;
+    
+    private Program() {  // makes JAXB happy, will never be invoked
+        this(null);   // ...therefore it doesn't matter what it creates
+    }
+    
     public Program(SubProgramBody s) { SubProgramBody = s; }
 }

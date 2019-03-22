@@ -5,8 +5,11 @@
  */
 package ast;
 
+import javax.xml.bind.annotation.XmlSeeAlso;
+
 /**
  *
  * @author mijail
  */
+@XmlSeeAlso({InMode.class,OutMode.class,InOutMode.class})
 public abstract class Mode {}
