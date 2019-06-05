@@ -11,5 +11,14 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  *
  * @author mijail
  */
-@XmlSeeAlso({InMode.class,OutMode.class,InOutMode.class})
-public abstract class Mode {}
+@XmlSeeAlso({InMode.class, OutMode.class, InOutMode.class})
+public abstract class Mode extends ASTNode {
+
+    private Mode(){
+        super(0,0);
+    }
+    
+    public Mode(int left, int right){
+        super(left, right);
+    }
+}

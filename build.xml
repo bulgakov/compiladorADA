@@ -96,7 +96,7 @@
         <files includes="${lib}/java-cup-11b-runtime.jar" />
     </path>
     <target name="compile" depends="generate">
-        <javac srcdir="${src}" destdir="${classes}">
+        <javac srcdir="${src}" destdir="${classes}" includeantruntime="false">
             <classpath refid="libraries" />
         </javac>
     </target>

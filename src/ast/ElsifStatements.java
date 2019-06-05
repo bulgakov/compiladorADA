@@ -18,5 +18,7 @@ public class ElsifStatements {
     @XmlElement
     public List<ElsifStatement> ElsifStatements;
     
-    public ElsifStatements(){ ElsifStatements = new ArrayList<>(); }
+    public ElsifStatements() { 
+        ElsifStatements = new ArrayList<ElsifStatement>(); 
+    }
 }

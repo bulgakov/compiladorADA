@@ -5,12 +5,29 @@
  */
 package ast;
 
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import type.BaseType;
+import visitors.Visitor;
 
 /**
  *
  * @author mijail
  */
 @XmlRootElement
-public class IntegerType extends Type { public IntegerType(){} }
+public class IntegerType extends Type { 
+    
+    private IntegerType() { 
+        this(0, 0);
+    }
+    
+    public IntegerType(int left, int right) { 
+        super(left, right);
+        type = BaseType.INTEGER;
+        super.type = type;
+    } 
+    
+    @Override
+    public void accept(Visitor v) {
+        v.visit(this);
+    }
+}

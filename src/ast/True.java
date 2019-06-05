@@ -7,6 +7,9 @@ package ast;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import visitors.CGVisitor;
+import visitors.TypeVisitor;
+import visitors.Visitor;
 
 /**
  *
@@ -15,5 +18,26 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class True extends Expression {
     
-    public True(){}
+    private True() {
+        this(0,0);
+    }
+    
+    public True(int left, int right){
+        super(left, right);
+    }
+    
+    @Override
+    public void accept(Visitor v) {
+        v.visit(this);
+    }
+
+    @Override
+    public void accept(TypeVisitor v) {
+        v.visit(this);
+    }
+
+    @Override
+    public void accept(CGVisitor v) {
+        v.visit(this);
+    }
 }

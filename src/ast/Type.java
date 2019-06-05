@@ -5,11 +5,27 @@
  */
 package ast;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import visitors.Visitor;
 
 /**
  *
  * @author mijail
  */
-public abstract class Type {}
+@XmlSeeAlso({
+    BooleanType.class,
+    IntegerType.class,
+    FloatType.class
+})
+public abstract class Type extends ASTNode {
+    
+    private Type() {
+        this(0,0);
+    }
+    
+    public Type(int left, int right){
+        super(left, right);
+    }
+    
+    public abstract void accept(Visitor v);
+}

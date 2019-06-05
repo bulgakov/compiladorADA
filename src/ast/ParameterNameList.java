@@ -18,5 +18,7 @@ public class ParameterNameList {
     @XmlElement
     public List<Identifier> Identifiers;
     
-    public ParameterNameList(){Identifiers = new ArrayList<>(); }
+    public ParameterNameList() { 
+        Identifiers = new ArrayList<>(); 
+    }
 }

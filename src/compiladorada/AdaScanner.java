@@ -7,6 +7,9 @@ package compiladorada;
 import java_cup.runtime.Symbol;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ComplexSymbolFactory.Location;
+import java.util.List;
+import java.util.ArrayList;
+import table.ErrorMsg;
 
 
 /**
@@ -422,6 +425,7 @@ public class AdaScanner implements java_cup.runtime.Scanner, sym {
 
   /* user code: */
   StringBuilder string = new StringBuilder();
+  List<ErrorMsg> errors = new ArrayList<ErrorMsg>();
   
   public AdaScanner(java.io.Reader in, ComplexSymbolFactory sf){
     this(in);
@@ -443,8 +447,8 @@ public class AdaScanner implements java_cup.runtime.Scanner, sym {
     Location right= new Location(yyline+1,yycolumn+yylength(), yychar+yylength());
     return symbolFactory.newSymbol(name, sym, left, right,val);
   }
-  private void error(String message) {
-    System.out.println("Error at line "+(yyline+1)+", column "+(yycolumn+1)+" : "+message);
+  private void addError() {
+    errors.add(new ErrorMsg(yyline+1, yycolumn+1, "Unexpected character \"" + yytext() + "\""));
   }
 
   private Symbol symbol(int type) {

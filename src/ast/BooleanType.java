@@ -5,12 +5,29 @@
  */
 package ast;
 
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import type.BaseType;
+import visitors.Visitor;
 
 /**
  *
  * @author mijail
  */
 @XmlRootElement
-public class BooleanType extends Type { public BooleanType(){} }
+public class BooleanType extends Type { 
+    
+    private BooleanType() {
+        this(0, 0);
+    }
+    
+    public BooleanType(int left, int right) { 
+        super(left, right);
+        type = BaseType.BOOLEAN;
+        super.type = type;
+    } 
+    
+    @Override
+    public void accept(Visitor v) {
+        v.visit(this);
+    }
+}

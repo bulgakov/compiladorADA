@@ -6,10 +6,28 @@
 package ast;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import type.BaseType;
+import visitors.Visitor;
 
 /**
  *
  * @author mijail
  */
 @XmlRootElement
-public class FloatType extends Type { public FloatType(){} }
+public class FloatType extends Type { 
+    
+    private FloatType() {
+        this(0, 0);
+    }
+    
+    public FloatType(int left, int right) { 
+        super(left, right);
+        type = BaseType.FLOAT;
+        super.type = type;
+    } 
+    
+    @Override
+    public void accept(Visitor v) {
+        v.visit(this);
+    }
+}

@@ -7,6 +7,9 @@ package ast;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import visitors.CGVisitor;
+import visitors.TypeVisitor;
+import visitors.Visitor;
 
 /**
  *
@@ -18,8 +21,26 @@ public class FloatLiteral extends Expression {
     public float f;
     
     private FloatLiteral() {  // makes JAXB happy, will never be invoked
-        this(0);   // ...therefore it doesn't matter what it creates
+        this(0f, 0, 0);   // ...therefore it doesn't matter what it creates
     }
     
-    public FloatLiteral(float f){ this.f = f; }
+    public FloatLiteral(float f, int left, int right) { 
+        super(left, right);
+        this.f = f; 
+    }
+    
+    @Override
+    public void accept(Visitor v) {
+        v.visit(this);
+    }
+
+    @Override
+    public void accept(TypeVisitor v) {
+        v.visit(this);
+    }
+
+    @Override
+    public void accept(CGVisitor v) {
+        v.visit(this);
+    }
 }

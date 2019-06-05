@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author mijail
  */
 @XmlRootElement
-public class IteratorPart {
+public class IteratorPart extends ASTNode {
     @XmlElement
     public String Iterator;
     @XmlElement
@@ -24,10 +24,14 @@ public class IteratorPart {
     public Expression Exp2;
     
     private IteratorPart() {  // makes JAXB happy, will never be invoked
-        this(null, null, null, null);   // ...therefore it doesn't matter what it creates
+        this(null, null, null, null, 0, 0);   // ...therefore it doesn't matter what it creates
     }
     
-    public IteratorPart(String i, Identifier id, Expression e1, Expression e2) {
-        Iterator=i; Identifier=id; Exp1=e1; Exp2=e2;
+    public IteratorPart(String i, Identifier id, Expression e1, Expression e2, int left, int right) {
+        super(left, right);
+        Iterator=i; 
+        Identifier=id; 
+        Exp1=e1; 
+        Exp2=e2;
     }
 }

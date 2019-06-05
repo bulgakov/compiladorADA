@@ -7,6 +7,9 @@ package ast;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import visitors.CGVisitor;
+import visitors.TypeVisitor;
+import visitors.Visitor;
 
 /**
  *
@@ -15,13 +18,32 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class CallExpression extends Expression {
     @XmlElement
-    public Expression Identifier;
+    public Identifier Identifier;
     @XmlElement
     public Parameters Parameters;
     
     private CallExpression() {  // makes JAXB happy, will never be invoked
-        this(null, null);   // ...therefore it doesn't matter what it creates
+        this(null, null, 0, 0);   // ...therefore it doesn't matter what it creates
     }
     
-    public CallExpression(Expression i, Parameters p) { Identifier=i; Parameters=p; }
+    public CallExpression(Identifier i, Parameters p, int left, int right) { 
+        super(left, right);
+        Identifier=i; 
+        Parameters=p; 
+    }
+    
+    @Override
+    public void accept(Visitor v) {
+        v.visit(this);
+    }
+
+    @Override
+    public void accept(TypeVisitor v) {
+        v.visit(this);
+    }
+
+    @Override
+    public void accept(CGVisitor v) {
+        v.visit(this);
+    }
 }

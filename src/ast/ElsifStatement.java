@@ -7,21 +7,40 @@ package ast;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import visitors.CGVisitor;
+import visitors.TypeVisitor;
+import visitors.Visitor;
 
 /**
  *
  * @author mijail
  */
 @XmlRootElement
-public class ElsifStatement {
+public class ElsifStatement extends ASTNode {
     @XmlElement
     public Expression Expression;
     @XmlElement
-    public SequenceOfStatements SequenceOfStatements;
+    public Statements Statements;
     
     private ElsifStatement() {  // makes JAXB happy, will never be invoked
-        this(null, null);   // ...therefore it doesn't matter what it creates
+        this(null, null, 0, 0);   // ...therefore it doesn't matter what it creates
     }
     
-    public ElsifStatement(Expression e, SequenceOfStatements s){ Expression=e; SequenceOfStatements=s; }
+    public ElsifStatement(Expression e, Statements s, int left, int right) { 
+        super(left, right);
+        Expression=e; 
+        Statements=s; 
+    }
+    
+    public void accept(Visitor v) {
+        v.visit(this);
+    }
+
+    public void accept(TypeVisitor v) {
+        v.visit(this);
+    }
+
+    public void accept(CGVisitor v) {
+        v.visit(this);
+    }
 }

@@ -20,5 +20,7 @@ public class DeclarativePart {
     @XmlElement
     public List<DeclarativeItem> Items;
     
-    public DeclarativePart(){ Items = new ArrayList<>(); }
+    public DeclarativePart(){ 
+        Items = new ArrayList<>(); 
+    }
 }

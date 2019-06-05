@@ -7,6 +7,9 @@ package ast;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import visitors.CGVisitor;
+import visitors.TypeVisitor;
+import visitors.Visitor;
 
 /**
  *
@@ -18,8 +21,26 @@ public class ReturnStatement extends Statement {
     public Expression Expression;
     
     private ReturnStatement() {  // makes JAXB happy, will never be invoked
-        this(null);   // ...therefore it doesn't matter what it creates
+        this(null, 0, 0);   // ...therefore it doesn't matter what it creates
     }
     
-    public ReturnStatement(Expression e) { Expression=e; }
+    public ReturnStatement(Expression e, int left, int right) { 
+        super(left, right);
+        Expression=e; 
+    }
+    
+    @Override
+    public void accept(Visitor v) {
+        v.visit(this);
+    }
+
+    @Override
+    public void accept(TypeVisitor v) {
+        v.visit(this);
+    }
+
+    @Override
+    public void accept(CGVisitor v) {
+        v.visit(this);
+    }
 }

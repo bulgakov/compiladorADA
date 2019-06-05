@@ -7,6 +7,9 @@ package ast;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import visitors.CGVisitor;
+import visitors.TypeVisitor;
+import visitors.Visitor;
 
 /**
  *
@@ -17,17 +20,36 @@ public class IfStatement extends Statement {
     @XmlElement
     public Expression Expression;
     @XmlElement
-    public SequenceOfStatements SequenceOfStatements;
+    public Statements Statements;
     @XmlElement
     public ElsifStatements ElsifStatements;
     @XmlElement
-    public ElseStatement ElseStatement;
+    public Statements ElseStatements;
     
     private IfStatement() {  // makes JAXB happy, will never be invoked
-        this(null, null, null, null);   // ...therefore it doesn't matter what it creates
+        this(null, null, null, null, 0, 0);   // ...therefore it doesn't matter what it creates
     }
     
-    public IfStatement(Expression e, SequenceOfStatements s, ElsifStatements elifs, ElseStatement els) {
-        Expression=e; SequenceOfStatements=s; ElsifStatements=elifs; ElseStatement=els;
+    public IfStatement(Expression e, Statements s, ElsifStatements elifs, Statements els, int left, int right) {
+        super(left, right);
+        Expression=e; 
+        Statements=s; 
+        ElsifStatements=elifs; 
+        ElseStatements=els;
+    }
+    
+    @Override
+    public void accept(Visitor v) {
+        v.visit(this);
+    }
+
+    @Override
+    public void accept(TypeVisitor v) {
+        v.visit(this);
+    }
+
+    @Override
+    public void accept(CGVisitor v) {
+        v.visit(this);
     }
 }

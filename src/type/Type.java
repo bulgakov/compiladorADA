@@ -3,16 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ast;
-
-import javax.xml.bind.annotation.XmlRootElement;
+package type;
 
 /**
  *
  * @author mijail
  */
-@XmlRootElement
-public class Null extends Expression {
-    
-    public Null(){ }
+public abstract class Type {
+    public abstract boolean same(Type e);
+    public abstract boolean assignable(Type e);
+    @Override
+    public abstract String toString();
 }

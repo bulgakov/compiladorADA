@@ -13,4 +13,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author mijail
  */
 @XmlRootElement
-public class InMode extends Mode { public InMode(){} }
+public class InMode extends Mode { 
+    
+    private InMode() {
+        this(0,0);
+    }
+    
+    public InMode(int left, int right) {
+        super(left, right);
+    } 
+}

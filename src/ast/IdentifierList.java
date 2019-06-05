@@ -18,5 +18,7 @@ public class IdentifierList {
     @XmlElement
     public List<Identifier> Identifiers;
     
-    public IdentifierList() { Identifiers = new ArrayList<>(); }
+    public IdentifierList() { 
+        Identifiers = new ArrayList<>(); 
+    }
 }

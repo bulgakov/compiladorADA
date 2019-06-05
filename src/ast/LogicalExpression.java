@@ -7,6 +7,9 @@ package ast;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import visitors.CGVisitor;
+import visitors.TypeVisitor;
+import visitors.Visitor;
 
 /**
  *
@@ -22,10 +25,28 @@ public class LogicalExpression extends Expression {
     public Expression Exp2;
     
     private LogicalExpression() {  // makes JAXB happy, will never be invoked
-        this(null, null, null);   // ...therefore it doesn't matter what it creates
+        this(null, null, null, 0, 0);   // ...therefore it doesn't matter what it creates
     }
     
-    public LogicalExpression(String op, Expression e1, Expression e2){ 
-        Operator=op; Exp1=e1; Exp2=e2;
+    public LogicalExpression(String op, Expression e1, Expression e2, int left, int right){ 
+        super(left, right);
+        Operator=op; 
+        Exp1=e1; 
+        Exp2=e2;
+    }
+    
+    @Override
+    public void accept(Visitor v) {
+        v.visit(this);
+    }
+
+    @Override
+    public void accept(TypeVisitor v) {
+        v.visit(this);
+    }
+
+    @Override
+    public void accept(CGVisitor v) {
+        v.visit(this);
     }
 }

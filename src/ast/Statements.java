@@ -14,9 +14,11 @@ import java.util.*;
  * @author mijail
  */
 @XmlRootElement
-public class SequenceOfStatements { 
+public class Statements { 
     @XmlElement
     public List<Statement> Statements;
-    
-    public SequenceOfStatements(){ Statements = new ArrayList<>(); }
+        
+    public Statements(){
+        Statements = new ArrayList<>(); 
+    }
 }

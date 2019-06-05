@@ -18,5 +18,7 @@ public class ParameterList {
     @XmlElement
     public List<ParameterDefinition> Parameters;
     
-    public ParameterList(){ Parameters = new ArrayList<>(); }
+    public ParameterList() { 
+        Parameters = new ArrayList<>(); 
+    }
 }

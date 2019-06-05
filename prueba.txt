@@ -6,6 +6,9 @@ procedure CH08_1 is
                            Faren :    out INTEGER) is
    begin
       Faren := 32 + Cent * 9 / 5;
+      if Centigrade = 0 then
+         Put("  Freezing point of water"); -- Un comentario
+      end if;
    end Cent_To_Faren;
 
 begin
